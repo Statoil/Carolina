@@ -29,8 +29,8 @@ jobs:
       fail-fast: true
       matrix:
         # https://github.com/actions/runner-images?tab=readme-ov-file#available-images
-        python-version: [ '3.11', '3.12' ]
-        os: [ 'macos-14', 'macos-14-large' ]
+        python-version: [ '3.11' ]
+        os: [ 'macos-latest' ]
 
     runs-on: ${{ matrix.os }}
     name: "Build 🛞 (${{ matrix.python-version }}, ${{ matrix.os }})"
@@ -91,7 +91,7 @@ jobs:
       if: steps.cache-package.outputs.cache-hit != 'true'
       run: |
         python -m pip install -U pip
-        python -m pip install numpy==1.26.4
+        python -m pip install numpy
 
     - name: Build needed boost libraries
       if: steps.cache-package.outputs.cache-hit != 'true'
@@ -101,7 +101,7 @@ jobs:
         mkdir -p /tmp/build
         cd /tmp/build
         BOOST_VERSION_UNDERSCORES=$(echo ${{ inputs.BOOST_VERSION }} | sed 's/\./_/g')
-        wget --quiet https://boostorg.jfrog.io/artifactory/main/release/${{ inputs.BOOST_VERSION }}/source/boost_${BOOST_VERSION_UNDERSCORES}.tar.gz
+        wget --quiet https://sourceforge.net/projects/boost/files/boost/${{ inputs.BOOST_VERSION }}/boost_${BOOST_VERSION_UNDERSCORES}.tar.gz
         tar -xf boost_${BOOST_VERSION_UNDERSCORES}.tar.gz
         cd boost_${BOOST_VERSION_UNDERSCORES}
         ./bootstrap.sh --with-libraries=python,filesystem,program_options,regex,serialization,system --with-python-version=${{ matrix.python_version }}
@@ -300,8 +300,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.11', '3.12' ]
-        os: [ 'macos-14', 'macos-14-large' ]
+        python-version: [ '3.11' ]
+        os: [ 'macos-14' ]
 
     runs-on: ${{ matrix.os }}
     steps:
